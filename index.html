@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebsiteBio - AI Image Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-image"></i>
+                <h1>WebsiteBio AI Image Generator</h1>
+            </div>
+            <p class="subtitle">Generate stunning images with AI-powered prompts</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Prompt Input Section -->
+            <section class="prompt-section">
+                <div class="prompt-container">
+                    <label for="prompt" class="prompt-label">
+                        <i class="fas fa-magic"></i>
+                        Describe your image
+                    </label>
+                    <div class="prompt-input-wrapper">
+                        <textarea 
+                            id="prompt" 
+                            class="prompt-input" 
+                            placeholder="e.g., A serene mountain landscape at sunset, photorealistic style..."
+                            rows="3"
+                        ></textarea>
+                        <button id="generateBtn" class="generate-btn">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                            Generate Images
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Panel -->
+            <section class="settings-section">
+                <h3><i class="fas fa-cog"></i> Generation Settings</h3>
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="model">Model</label>
+                        <select id="model" class="setting-select">
+                            <option value="nano-banana">Nano Banana (Fast)</option>
+                            <option value="IMAGEN_4">IMAGEN 4 (High Quality)</option>
+                            <option value="nano-banana-r2i">Nano Banana R2I</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="size">Image Size</label>
+                        <select id="size" class="setting-select">
+                            <option value="1792x1024">1792×1024 Landscape</option>
+                            <option value="1024x1792">1024×1792 Portrait</option>
+                            <option value="1024x1024">1024×1024 Square</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="quantity">Number of Images</label>
+                        <select id="quantity" class="setting-select">
+                            <option value="1">1 Image</option>
+                            <option value="2" selected>2 Images</option>
+                            <option value="3">3 Images</option>
+                            <option value="4">4 Images</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="seed">Seed (Optional)</label>
+                        <input 
+                            type="number" 
+                            id="seed" 
+                            class="setting-input" 
+                            placeholder="Random"
+                            min="0"
+                            max="999999"
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section id="loadingSection" class="loading-section" style="display: none;">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p class="loading-text">Generating your images...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section id="errorSection" class="error-section" style="display: none;">
+                <div class="error-container">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Oops! Something went wrong</h3>
+                    <p id="errorMessage">An error occurred while generating images.</p>
+                    <button id="retryBtn" class="retry-btn">
+                        <i class="fas fa-redo"></i>
+                        Try Again
+                    </button>
+                </div>
+            </section>
+
+            <!-- Image Gallery -->
+            <section id="gallerySection" class="gallery-section">
+                <h3><i class="fas fa-images"></i> Generated Images</h3>
+                <div id="imageGallery" class="image-gallery">
+                    <div class="gallery-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>Your generated images will appear here</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 WebsiteBio. Powered by WhomeAI API.</p>
+        </footer>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">×</span>
+            <img id="modalImage" src="" alt="Generated Image">
+            <div class="modal-info">
+                <h4>Revised Prompt</h4>
+                <p id="modalPrompt"></p>
+                <div class="modal-actions">
+                    <button id="downloadBtn" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
