@@ -48,10 +48,18 @@ xdg-open index.html # Linux
 ### Project Structure
 ```
 /
-├── index.html      # Main HTML structure
-├── styles.css      # Responsive CSS styling
-├── script.js       # JavaScript functionality and API integration
-└── README.md       # This documentation file
+├── index.html              # Main HTML structure
+├── styles.css              # Responsive CSS styling
+├── script.js               # JavaScript functionality and API integration
+├── config.js               # Configuration and environment handling
+├── vercel.json             # Vercel deployment configuration
+├── DEPLOYMENT.md           # Deployment guide and instructions
+├── api/
+│   └── generateImages.js   # Serverless function for API requests
+├── .github/
+│   └── workflows/
+│       └── deploy.yml      # GitHub Actions deployment workflow
+└── README.md               # This documentation file
 ```
 
 ## 🎯 Usage Guide
@@ -214,10 +222,43 @@ The interface is fully responsive with:
 - **"API Error"**: Check API service status or network connection
 - **"Invalid response"**: Try regenerating with simpler prompt
 
-## 🚀 Development
+## 🌐 Deployment
+
+### Deploy to Vercel (Recommended)
+
+This project is configured for seamless deployment on Vercel with automatic CI/CD:
+
+1. **Connect GitHub Repository**
+   ```bash
+   # Push code to GitHub
+   git push origin main
+   ```
+
+2. **Deploy on Vercel**
+   - Go to [https://vercel.com](https://vercel.com)
+   - Click "Add New Project" and select your GitHub repository
+   - Vercel will auto-detect the configuration from `vercel.json`
+
+3. **Set Environment Variables**
+   - In Vercel Dashboard → Project Settings → Environment Variables
+   - Add: `WHOMEAI_API_KEY = sk-demo` (or your API key)
+
+4. **Automatic Deployments**
+   - Push to `main` → Production deployment
+   - Create pull request → Preview deployment
+   - Automatic SSL/HTTPS setup
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ### Local Development
 1. **Serve files**: Use any local server (Live Server, Python's `http.server`, etc.)
+   ```bash
+   # Using Python
+   python3 -m http.server 8000
+   
+   # Using Node.js (with http-server)
+   npx http-server
+   ```
 2. **Debug mode**: Open browser developer tools for detailed error messages
 3. **Testing**: Test on multiple browsers and devices
 
@@ -227,6 +268,16 @@ The codebase is modular and extensible:
 - **Custom themes**: Modify CSS custom properties
 - **Additional settings**: Extend the settings panel
 - **Image effects**: Add post-processing filters
+
+### Environment Variables
+Configure via `.env` file for local development:
+```bash
+# .env (for local development)
+WHOMEAI_API_KEY=sk-demo
+VITE_WHOMEAI_API_ENDPOINT=https://api.whomeai.com/v1/images/generations
+```
+
+Use `.env.example` as a template.
 
 ## 📄 License
 

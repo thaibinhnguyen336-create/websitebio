@@ -3,9 +3,27 @@ const state = {
     isGenerating: false,
     generatedImages: [],
     currentPrompt: '',
-    apiKey: 'sk-demo', // WhomeAI API key
+    apiKey: getApiKey(), // WhomeAI API key
     baseUrl: 'https://api.whomeai.com/v1/images/generations'
 };
+
+// Get API key from environment or fallback to demo key
+function getApiKey() {
+    // Check if running in browser environment
+    if (typeof window !== 'undefined') {
+        // Try to get from window.__ENV__ injected by Vercel
+        if (window.__ENV__ && window.__ENV__.WHOMEAI_API_KEY) {
+            return window.__ENV__.WHOMEAI_API_KEY;
+        }
+        // Try to get from localStorage (for development)
+        const storedKey = localStorage.getItem('websitebio-api-key');
+        if (storedKey) {
+            return storedKey;
+        }
+    }
+    // Fallback to demo key
+    return 'sk-demo';
+}
 
 // DOM Elements
 const elements = {
@@ -146,12 +164,16 @@ async function generateImages(prompt) {
         requestBody.seed = settings.seed;
     }
     
-    const response = await fetch(state.baseUrl, {
+    const apiUrl = isProduction() ? '/api/generateImages' : state.baseUrl;
+    const headers = { 'Content-Type': 'application/json' };
+    
+    if (!isProduction()) {
+        headers['Authorization'] = `Bearer ${state.apiKey}`;
+    }
+    
+    const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${state.apiKey}`,
-            'Content-Type': 'application/json'
-        },
+        headers: headers,
         body: JSON.stringify(requestBody)
     });
     
@@ -180,6 +202,14 @@ async function generateImages(prompt) {
     
     console.log('✅ Generated', processedImages.length, 'images');
     return processedImages;
+}
+
+// Check if running in production (Vercel)
+function isProduction() {
+    return typeof window !== 'undefined' && (
+        window.location.hostname !== 'localhost' &&
+        window.location.hostname !== '127.0.0.1'
+    );
 }
 
 // Display images in gallery
