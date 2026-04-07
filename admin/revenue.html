@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue - WebsiteBio Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Admin</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="subscribers.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Subscribers</span>
+                </a>
+                <a href="revenue.html" class="nav-item active">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Revenue</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="/index.html" class="nav-item">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Site</span>
+                </a>
+                <a href="#" class="nav-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Revenue Analytics</h1>
+                <div class="header-actions">
+                    <select id="periodSelect" class="period-select">
+                        <option value="30">Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                        <option value="365">Last 12 months</option>
+                    </select>
+                    <button class="btn btn-secondary" id="refreshBtn">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+            </header>
+
+            <!-- Revenue Stats -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Total Revenue</span>
+                        <span class="stat-value" id="totalRevenue">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Monthly Recurring</span>
+                        <span class="stat-value" id="mrrValue">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Total Payments</span>
+                        <span class="stat-value" id="totalPayments">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Avg. Payment</span>
+                        <span class="stat-value" id="avgPayment">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Growth Card -->
+            <section class="growth-section" id="growthSection" style="display: none;">
+                <div class="growth-card">
+                    <div class="growth-indicator" id="growthIndicator">
+                        <i class="fas fa-arrow-up"></i>
+                        <span id="growthPercent">0%</span>
+                    </div>
+                    <span class="growth-label">Revenue Growth vs Previous Period</span>
+                </div>
+            </section>
+
+            <!-- Revenue Chart -->
+            <section class="chart-section">
+                <div class="chart-card full-width">
+                    <h3>Revenue Over Time</h3>
+                    <div class="chart-container large">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Table -->
+            <section class="table-section">
+                <h3>Payment History</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Invoice ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <tr>
+                            <td colspan="4" class="loading-cell">
+                                <i class="fas fa-spinner fa-spin"></i> Loading payments...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initRevenuePage();
+        });
+    </script>
+</body>
+</html>

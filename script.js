@@ -101,6 +101,23 @@ function setupEventListeners() {
 
 // Handle image generation
 async function handleGenerate() {
+    // Check subscription status first
+    if (typeof auth !== 'undefined') {
+        const isLoggedIn = auth.isAuthenticated();
+        
+        if (!isLoggedIn) {
+            showError('Please <a href="login.html" style="color: #667eea; text-decoration: underline;">log in</a> to generate images.');
+            return;
+        }
+        
+        // Check subscription
+        const isSubscribed = auth.isSubscriber();
+        if (!isSubscribed) {
+            showUpgradePrompt();
+            return;
+        }
+    }
+    
     const prompt = elements.prompt.value.trim();
     
     if (!prompt) {
@@ -139,6 +156,41 @@ async function handleGenerate() {
         updateGenerateButton(false);
         showError(error.message || 'Failed to generate images. Please try again.');
     }
+}
+
+// Show upgrade prompt for non-subscribers
+function showUpgradePrompt() {
+    const upgradeModal = document.createElement('div');
+    upgradeModal.className = 'modal';
+    upgradeModal.style.display = 'flex';
+    upgradeModal.innerHTML = `
+        <div class="modal-content" style="text-align: center; padding: 40px;">
+            <span class="modal-close" onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #9ca3af;">×</span>
+            <i class="fas fa-crown" style="font-size: 3rem; color: #667eea; margin-bottom: 20px;"></i>
+            <h2 style="margin-bottom: 15px; color: #1f2937;">Upgrade to Pro</h2>
+            <p style="color: #6b7280; margin-bottom: 25px; line-height: 1.6;">
+                Get unlimited access to AI image generation!<br>
+                First month: <strong style="color: #10b981;">$19</strong> (instead of $30)<br>
+                Then: <strong>$30/month</strong>
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="subscription.html" class="generate-btn" style="text-decoration: none; display: inline-flex;">
+                    <i class="fas fa-rocket"></i> Subscribe Now
+                </a>
+                <a href="login.html" class="generate-btn" style="text-decoration: none; display: inline-flex; background: #6b7280;">
+                    <i class="fas fa-sign-in-alt"></i> Log In
+                </a>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(upgradeModal);
+    
+    // Close on background click
+    upgradeModal.addEventListener('click', function(e) {
+        if (e.target === upgradeModal) {
+            upgradeModal.remove();
+        }
+    });
 }
 
 // Generate images via API

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribers - WebsiteBio Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Admin</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="subscribers.html" class="nav-item active">
+                    <i class="fas fa-users"></i>
+                    <span>Subscribers</span>
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Revenue</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="/index.html" class="nav-item">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Site</span>
+                </a>
+                <a href="#" class="nav-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Subscribers</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="refreshBtn">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+            </header>
+
+            <!-- Filters -->
+            <section class="filters-section">
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="trialing">Trialing</option>
+                        <option value="past_due">Past Due</option>
+                        <option value="canceled">Canceled</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="searchInput">Search:</label>
+                    <input type="text" id="searchInput" class="filter-input" placeholder="Search by email...">
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-primary" id="applyFiltersBtn">
+                        <i class="fas fa-filter"></i> Apply
+                    </button>
+                    <button class="btn btn-secondary" id="clearFiltersBtn">
+                        Clear
+                    </button>
+                </div>
+            </section>
+
+            <!-- Stats Summary -->
+            <section class="stats-summary">
+                <span id="showingCount">Loading...</span>
+            </section>
+
+            <!-- Subscribers Table -->
+            <section class="table-section">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Period End</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscribersTableBody">
+                        <tr>
+                            <td colspan="6" class="loading-cell">
+                                <i class="fas fa-spinner fa-spin"></i> Loading subscribers...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Pagination -->
+            <section class="pagination-section">
+                <div class="pagination-info">
+                    <span id="pageInfo">Page 1 of 1</span>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn btn-secondary" id="prevPageBtn" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <button class="btn btn-secondary" id="nextPageBtn" disabled>
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Subscriber Detail Modal -->
+    <div id="subscriberModal" class="admin-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Subscriber Details</h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="loading-placeholder">
+                    <i class="fas fa-spinner fa-spin"></i> Loading...
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeModalBtn2">Close</button>
+                <button class="btn btn-danger" id="cancelSubModalBtn">Cancel Subscription</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initSubscribersPage();
+        });
+    </script>
+</body>
+</html>

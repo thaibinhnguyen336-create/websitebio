@@ -14,6 +14,23 @@
                 <i class="fas fa-image"></i>
                 <h1>WebsiteBio AI Image Generator</h1>
             </div>
+            <div class="header-nav" id="headerNav">
+                <a href="login.html" class="nav-link" id="loginLink">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="signup.html" class="nav-link" id="signupLink">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </a>
+                <a href="subscription.html" class="nav-link" id="subscriptionLink" style="display: none;">
+                    <i class="fas fa-crown"></i> Subscription
+                </a>
+                <a href="admin/dashboard.html" class="nav-link" id="adminLink" style="display: none;">
+                    <i class="fas fa-shield-alt"></i> Admin
+                </a>
+                <a href="#" class="nav-link" id="logoutLink" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
             <p class="subtitle">Generate stunning images with AI-powered prompts</p>
         </header>
 
@@ -147,6 +164,32 @@
     </div>
 
     <script src="config.js"></script>
+    <script src="auth.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Initialize auth state in header
+        document.addEventListener('DOMContentLoaded', function() {
+            updateHeaderAuth();
+        });
+
+        function updateHeaderAuth() {
+            const isLoggedIn = auth.isAuthenticated();
+            const user = auth.getUser();
+            const isSub = auth.isSubscriber();
+            const isAdminUser = user && user.is_admin;
+
+            document.getElementById('loginLink').style.display = isLoggedIn ? 'none' : 'inline-flex';
+            document.getElementById('signupLink').style.display = isLoggedIn ? 'none' : 'inline-flex';
+            document.getElementById('subscriptionLink').style.display = isLoggedIn ? 'inline-flex' : 'none';
+            document.getElementById('adminLink').style.display = isAdminUser ? 'inline-flex' : 'none';
+            document.getElementById('logoutLink').style.display = isLoggedIn ? 'inline-flex' : 'none';
+
+            // Logout handler
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                auth.logout();
+            });
+        }
+    </script>
 </body>
 </html>
