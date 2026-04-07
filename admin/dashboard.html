@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - WebsiteBio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Admin</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="subscribers.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Subscribers</span>
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Revenue</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="/index.html" class="nav-item">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Site</span>
+                </a>
+                <a href="#" class="nav-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Dashboard Overview</h1>
+                <div class="header-actions">
+                    <span id="lastUpdated">Last updated: -</span>
+                    <button class="btn btn-secondary" id="refreshBtn">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Total Users</span>
+                        <span class="stat-value" id="totalUsers">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Active Subscribers</span>
+                        <span class="stat-value" id="activeSubs">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Monthly Revenue</span>
+                        <span class="stat-value" id="mrr">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">New (30 days)</span>
+                        <span class="stat-value" id="newSubs">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alerts Section -->
+            <section class="alerts-section" id="alertsSection" style="display: none;">
+                <h2><i class="fas fa-exclamation-triangle"></i> Alerts</h2>
+                <div class="alerts-grid" id="alertsGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-card">
+                    <h3>Subscription Status</h3>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Recent Revenue Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="recent-section">
+                <div class="recent-card">
+                    <h3><i class="fas fa-clock"></i> Recent Subscribers</h3>
+                    <div class="recent-list" id="recentSubscribers">
+                        <div class="loading-placeholder">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-card">
+                    <h3><i class="fas fa-receipt"></i> Recent Payments</h3>
+                    <div class="recent-list" id="recentPayments">
+                        <div class="loading-placeholder">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initAdminDashboard();
+        });
+    </script>
+</body>
+</html>

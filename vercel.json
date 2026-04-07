@@ -7,6 +7,58 @@
     "api/generateImages.js": {
       "maxDuration": 60,
       "memory": 1024
+    },
+    "api/auth/signup.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "api/auth/login.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "api/auth/logout.js": {
+      "maxDuration": 30,
+      "memory": 512
+    },
+    "api/auth/session.js": {
+      "maxDuration": 30,
+      "memory": 512
+    },
+    "api/subscription/create-checkout.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "api/subscription/portal.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "api/subscription/cancel.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "api/subscription/status.js": {
+      "maxDuration": 30,
+      "memory": 512
+    },
+    "api/webhooks/stripe.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "api/admin/dashboard.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "api/admin/subscribers.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "api/admin/subscription.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "api/admin/revenue.js": {
+      "maxDuration": 30,
+      "memory": 1024
     }
   },
   "headers": [
@@ -65,6 +117,23 @@
           "value": "geolocation=(), microphone=(), camera=()"
         }
       ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -74,6 +143,15 @@
     }
   ],
   "env": {
-    "WHOMEAI_API_KEY": "@whomeai-api-key"
+    "WHOMEAI_API_KEY": "@whomeai-api-key",
+    "STRIPE_SECRET_KEY": "@stripe-secret-key",
+    "STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key",
+    "STRIPE_WEBHOOK_SECRET": "@stripe-webhook-secret",
+    "STRIPE_PRICE_ID": "@stripe-price-id",
+    "STRIPE_FIRST_MONTH_COUPON_ID": "@stripe-first-month-coupon-id",
+    "SUPABASE_URL": "@supabase-url",
+    "SUPABASE_ANON_KEY": "@supabase-anon-key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
+    "JWT_SECRET": "@jwt-secret"
   }
 }

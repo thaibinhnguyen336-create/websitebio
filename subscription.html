@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription - WebsiteBio AI Image Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-subscription.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-image"></i>
+                <h1>WebsiteBio</h1>
+            </div>
+            <div class="header-nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="#" id="logoutBtn" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- User Info Section -->
+            <section class="user-info-section">
+                <div class="user-card">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h2 id="userEmail">Loading...</h2>
+                        <p id="userName">Loading...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Subscription Status Section -->
+            <section class="subscription-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-credit-card"></i> Your Subscription</h2>
+                </div>
+
+                <div id="subscriptionLoading" class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading subscription status...</p>
+                </div>
+
+                <div id="subscriptionContent" style="display: none;">
+                    <!-- Active/Trial Subscription -->
+                    <div id="activeSubscription" class="subscription-card active" style="display: none;">
+                        <div class="subscription-status">
+                            <span class="status-badge active"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="status-badge trial" id="trialBadge" style="display: none;"><i class="fas fa-flask"></i> Trial</span>
+                        </div>
+                        
+                        <div class="subscription-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Plan</span>
+                                <span class="detail-value">Pro Plan</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Price</span>
+                                <span class="detail-value">$30/month</span>
+                            </div>
+                            <div class="detail-row" id="firstMonthDiscount" style="display: none;">
+                                <span class="detail-label">First Month</span>
+                                <span class="detail-value discount">$19 (37% off)</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Current Period</span>
+                                <span class="detail-value" id="periodDates">-</span>
+                            </div>
+                            <div class="detail-row" id="cancelRow" style="display: none;">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value warning"><i class="fas fa-exclamation-triangle"></i> Canceling at period end</span>
+                            </div>
+                        </div>
+
+                        <div class="subscription-actions">
+                            <button class="btn btn-primary" id="manageBillingBtn">
+                                <i class="fas fa-cog"></i> Manage Billing
+                            </button>
+                            <button class="btn btn-danger" id="cancelSubBtn">
+                                <i class="fas fa-times"></i> Cancel Subscription
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- No Active Subscription -->
+                    <div id="inactiveSubscription" class="subscription-card inactive" style="display: none;">
+                        <div class="subscription-status">
+                            <span class="status-badge inactive"><i class="fas fa-times-circle"></i> No Active Subscription</span>
+                        </div>
+
+                        <p class="upgrade-prompt">Upgrade to Pro to unlock unlimited image generation!</p>
+
+                        <div class="pricing-box">
+                            <div class="pricing-tier featured">
+                                <span class="tier-name">Pro Plan</span>
+                                <div class="tier-pricing">
+                                    <span class="price">$19<span class="period">/first month</span></span>
+                                    <span class="price-secondary">Then $30/month</span>
+                                </div>
+                                <ul class="tier-features">
+                                    <li><i class="fas fa-check"></i> Unlimited image generation</li>
+                                    <li><i class="fas fa-check"></i> High-quality AI models</li>
+                                    <li><i class="fas fa-check"></i> Priority processing</li>
+                                    <li><i class="fas fa-check"></i> Cancel anytime</li>
+                                </ul>
+                                <button class="btn btn-primary btn-large" id="subscribeBtn">
+                                    <i class="fas fa-rocket"></i> Subscribe Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Past Due -->
+                    <div id="pastDueSubscription" class="subscription-card past-due" style="display: none;">
+                        <div class="subscription-status">
+                            <span class="status-badge danger"><i class="fas fa-exclamation-triangle"></i> Payment Past Due</span>
+                        </div>
+                        <p>Your payment failed. Please update your payment method to continue service.</p>
+                        <button class="btn btn-primary" id="updatePaymentBtn">
+                            <i class="fas fa-credit-card"></i> Update Payment
+                        </button>
+                    </div>
+                </div>
+
+                <div id="subscriptionError" class="error-state" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Failed to load subscription status</p>
+                    <button class="btn btn-secondary" id="retryBtn">Retry</button>
+                </div>
+            </section>
+
+            <!-- Payment History Section -->
+            <section class="history-section" id="paymentHistorySection" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Payment History</h2>
+                </div>
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Invoice</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentHistoryBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="noPayments" class="empty-state" style="display: none;">
+                    <i class="fas fa-receipt"></i>
+                    <p>No payment history yet</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2024 WebsiteBio. Powered by WhomeAI API.</p>
+        </footer>
+    </div>
+
+    <!-- Cancel Confirmation Modal -->
+    <div id="cancelModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cancel Subscription?</h3>
+            </div>
+            <div class="modal-body">
+                <p>Choose how you want to cancel:</p>
+                <div class="cancel-options">
+                    <label class="cancel-option">
+                        <input type="radio" name="cancelType" value="at_period_end" checked>
+                        <span class="option-content">
+                            <strong>Cancel at period end</strong>
+                            <span>Continue access until <span id="periodEndDate"></span></span>
+                        </span>
+                    </label>
+                    <label class="cancel-option">
+                        <input type="radio" name="cancelType" value="immediate">
+                        <span class="option-content">
+                            <strong>Cancel immediately</strong>
+                            <span>Lose access right away</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelModalClose">Keep Subscription</button>
+                <button class="btn btn-danger" id="confirmCancelBtn">Confirm Cancellation</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="subscription.js"></script>
+</body>
+</html>

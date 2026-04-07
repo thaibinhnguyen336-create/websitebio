@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - WebsiteBio AI Image Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-auth.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-image"></i>
+                    <h1>WebsiteBio</h1>
+                </div>
+                <p class="auth-subtitle">Create your account</p>
+            </div>
+
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label for="fullName">
+                        <i class="fas fa-user"></i>
+                        Full Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="fullName" 
+                        placeholder="John Doe"
+                        autocomplete="name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="At least 6 characters"
+                        autocomplete="new-password"
+                    >
+                    <div class="password-strength" id="passwordStrength"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <i class="fas fa-lock"></i>
+                        Confirm Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        required 
+                        placeholder="Confirm your password"
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span></span>
+                </div>
+
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <span></span>
+                </div>
+
+                <button type="submit" class="auth-btn" id="submitBtn">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign in</a></p>
+                <p class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Generator</a></p>
+            </div>
+        </div>
+
+        <div class="auth-features">
+            <h2>Join WebsiteBio Pro</h2>
+            <ul>
+                <li><i class="fas fa-check"></i> Start with $19 for your first month</li>
+                <li><i class="fas fa-check"></i> Then just $30/month</li>
+                <li><i class="fas fa-check"></i> Unlimited image generation</li>
+                <li><i class="fas fa-check"></i> No commitment, cancel anytime</li>
+            </ul>
+            <div class="pricing-highlight">
+                <span class="price-label">Special Offer</span>
+                <span class="price">$19</span>
+                <span class="price-period">first month</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('signupForm');
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            const passwordInput = document.getElementById('password');
+            const passwordStrength = document.getElementById('passwordStrength');
+
+            // Check if already logged in
+            const session = localStorage.getItem('websitebio_session');
+            if (session) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Password strength indicator
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                updatePasswordStrength(password);
+            });
+
+            function updatePasswordStrength(password) {
+                let strength = 0;
+                if (password.length >= 6) strength++;
+                if (password.length >= 10) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+                const colors = ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#10b981'];
+                const labels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+                
+                passwordStrength.style.width = `${(strength / 5) * 100}%`;
+                passwordStrength.style.backgroundColor = colors[Math.min(strength - 1, 4)] || colors[0];
+                passwordStrength.style.opacity = password.length > 0 ? '1' : '0';
+            }
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // Clear previous messages
+                hideError();
+                hideSuccess();
+
+                // Validate
+                if (!email || !password) {
+                    showError('Please fill in all required fields');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    showError('Passwords do not match');
+                    return;
+                }
+
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+
+                try {
+                    const response = await fetch('/api/auth/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            email, 
+                            password,
+                            fullName: fullName || null
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Signup failed');
+                    }
+
+                    // Show success and redirect to login
+                    showSuccess('Account created! Redirecting to login...');
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Account Created';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'login.html?just_signed_up=true';
+                    }, 2000);
+
+                } catch (error) {
+                    showError(error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+                }
+            });
+
+            function showError(message) {
+                const errorSpan = errorDiv.querySelector('span');
+                errorSpan.textContent = message;
+                errorDiv.style.display = 'flex';
+                successDiv.style.display = 'none';
+            }
+
+            function hideError() {
+                errorDiv.style.display = 'none';
+            }
+
+            function showSuccess(message) {
+                const successSpan = successDiv.querySelector('span');
+                successSpan.textContent = message;
+                successDiv.style.display = 'flex';
+                errorDiv.style.display = 'none';
+            }
+
+            function hideSuccess() {
+                successDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

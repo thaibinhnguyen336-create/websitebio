@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WebsiteBio AI Image Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-auth.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-image"></i>
+                    <h1>WebsiteBio</h1>
+                </div>
+                <p class="auth-subtitle">Sign in to your account</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span></span>
+                </div>
+
+                <button type="submit" class="auth-btn" id="submitBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+                <p class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Generator</a></p>
+            </div>
+        </div>
+
+        <div class="auth-features">
+            <h2>Unlock Pro Features</h2>
+            <ul>
+                <li><i class="fas fa-check"></i> Unlimited image generation</li>
+                <li><i class="fas fa-check"></i> High-quality AI models</li>
+                <li><i class="fas fa-check"></i> Priority support</li>
+                <li><i class="fas fa-check"></i> Cancel anytime</li>
+            </ul>
+            <div class="pricing-highlight">
+                <span class="price-label">First month only</span>
+                <span class="price">$19</span>
+                <span class="price-period">then $30/mo</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const errorDiv = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Check if already logged in
+            const session = localStorage.getItem('websitebio_session');
+            if (session) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                // Clear previous errors
+                hideError();
+
+                // Validate
+                if (!email || !password) {
+                    showError('Please enter both email and password');
+                    return;
+                }
+
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Login failed');
+                    }
+
+                    // Save session
+                    localStorage.setItem('websitebio_session', JSON.stringify(data.session));
+                    localStorage.setItem('websitebio_user', JSON.stringify(data.user));
+                    localStorage.setItem('websitebio_subscription', JSON.stringify(data.subscription));
+
+                    // Redirect to main page
+                    window.location.href = 'index.html';
+
+                } catch (error) {
+                    showError(error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+                }
+            });
+
+            function showError(message) {
+                const errorSpan = errorDiv.querySelector('span');
+                errorSpan.textContent = message;
+                errorDiv.style.display = 'flex';
+            }
+
+            function hideError() {
+                errorDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
